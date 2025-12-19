@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="A small dedication page — I LOVE YOU CAPTAIN" />
+  <title>I Love You Captain</title>
+  <link rel="icon" href="/favicon.ico" />
+
+  <style>
+    :root{
+      --bg1: #000000;
+      --bg2: #1a001a;
+      --bg3: #330033;
+      --accent-start: #ff4d6d;
+      --accent-mid: #ffcc00;
+      --accent-end: #00ffff;
+    }
+
+    html,body{
+      height:100%;
+      margin:0;
+    }
+
+    body {
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: 'Courier New', monospace;
+      background: linear-gradient(270deg, var(--bg1), var(--bg2), var(--bg3));
+      background-size: 600% 600%;
+      animation: bgMove 12s ease infinite;
+      overflow:hidden;
+      color:#fff;
+    }
+
+    @keyframes bgMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .container{
+      text-align:center;
+      padding: 2rem;
+    }
+
+    /* Responsive font-size */
+    h1.typing {
+      display:inline-block;
+      font-size: clamp(1.6rem, 6vw, 3.2rem);
+      letter-spacing: 4px;
+      margin:0;
+      white-space:nowrap;
+      position:relative;
+      background: linear-gradient(90deg, var(--accent-start), var(--accent-mid), var(--accent-end));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-fill-color: transparent;
+      padding-right: 0.5rem; /* space for caret */
+    }
+
+    /* blinking caret */
+    h1.typing::after{
+      content: "";
+      position:absolute;
+      right: 0;
+      top: 12%;
+      width: 3px;
+      height: 76%;
+      background: #fff;
+      border-radius:2px;
+      animation: blinkCaret 0.8s steps(1) infinite;
+      /* place caret slightly outside clipped text so it's visible on dark bg */
+      transform: translateX(8px);
+    }
+    @keyframes blinkCaret {
+      50% { opacity: 0; }
+    }
+
+    .heart{
+      font-size: clamp(2rem, 10vw, 4rem);
+      margin-top: 1.25rem;
+      animation: beat 1s infinite;
+      display:inline-block;
+    }
+    @keyframes beat {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.25); }
+      100% { transform: scale(1); }
+    }
+
+    /* Respect prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce){
+      * { animation: none !important; transition: none !important; }
+      h1.typing::after { display:none; } /* no blinking caret */
+    }
+
+    /* Small screens adjustments */
+    @media (max-width:420px){
+      body { padding: 1rem; }
+      h1.typing { letter-spacing:2px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Use heading + aria-live for screen readers -->
+    <h1 id="typing" class="typing" aria-live="polite" aria-atomic="true"></h1>
+    <div class="heart" role="img" aria-label="red heart">❤️</div>
+  </div>
+
+  <script>
+    (function(){
+      const text = "I LOVE YOU CAPTAIN";
+      const el = document.getElementById('typing');
+
+      // If user prefers reduced motion, show full text immediately
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduce) {
+        el.textContent = text;
+        return;
+      }
+
+      let i = 0;
+      function typeEffect(){
+        if (i < text.length){
+          // Use textContent for safety (no HTML injection)
+          el.textContent += text.charAt(i);
+          i++;
+          setTimeout(typeEffect, 120);
+        } else {
+          // remove caret after finished (optional)
+          // el.classList.add('done'); // or keep caret
+        }
+      }
+
+      // start typing after small delay
+      setTimeout(typeEffect, 300);
+    })();
+  </script>
+</body>
+</html>
